@@ -14,11 +14,10 @@ namespace ConsoleAppUsedForDebugging
     {
         static void Main(string[] args)
         {
-            ProjectFactory projectFactory = new ProjectFactory();
-            CSharpProject newProject = projectFactory.Get<CSharpProject>(@"C:\Users\Alexa\Desktop\Projects\newProject.prj");
+            CSharpProject newProject = ProjectFactory.Get<CSharpProject>(@"C:\Users\Alexa\Desktop\Projects\newProject.prj");
             Console.WriteLine(newProject.Name);
 
-            CPPProject secondProject = projectFactory.Get<CPPProject>(@"C:\Users\Alexa\Desktop\Projects\newProject.prj");
+            CPPProject secondProject = ProjectFactory.Get<CPPProject>(@"C:\Users\Alexa\Desktop\Projects\newProject.prj");
             Console.WriteLine(secondProject.Name);
             Console.ReadLine();
         }

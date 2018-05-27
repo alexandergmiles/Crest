@@ -15,9 +15,12 @@ namespace Crest.Data
 {
     public sealed class ProjectFactory
     {
-        private static readonly Lazy<ProjectFactory> lazy = new Lazy<ProjectFactory>(() => new ProjectFactory());
 
-        public static ProjectFactory Instance { get { return lazy.Value; } }
+        //Leaving this here as an example of the singleton pattern. Might need to use this later on and it'll be good to reference
+        //back to.
+        //private static readonly Lazy<ProjectFactory> lazy = new Lazy<ProjectFactory>(() => new ProjectFactory());
+
+        //public static ProjectFactory Instance { get { return lazy.Value; } }
 
         private ProjectFactory()
         {
