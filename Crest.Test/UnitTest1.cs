@@ -27,9 +27,7 @@ namespace Crest.Test
                     path = folderBrowsingDialog.SelectedPath;
             }
             path += "/newProject.prj";
-            ProjectFactory projectFactory = new ProjectFactory();
             CSharpProject project = new CSharpProject("Aurora", "Agmiles", new List<string> { "C#" });
-            //Assert.AreEqual(true, projectFactory.SaveProject(path, project));
         }
 
         [TestMethod]
@@ -47,23 +45,21 @@ namespace Crest.Test
 
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
-                try
-                {
-                    if ((loadStream = openFileDialog.OpenFile()) != null)
-                        using (StreamReader reader = new StreamReader(loadStream))
-                        {
-                            result = reader.ReadToEndAsync().Result;
-                        }
-                }
-                catch (Exception e)
-                {
-
-                }
+                if ((loadStream = openFileDialog.OpenFile()) != null)
+                    using (StreamReader reader = new StreamReader(loadStream))
+                    {
+                        result = reader.ReadToEndAsync().Result;
+                    }
             }
-            ProjectFactory projectFactory = new ProjectFactory();
-            CSharpProject loadedProject = projectFactory.LoadProject<CSharpProject>(result);
+            CSharpProject loadedProject = ProjectFactory.Get<CSharpProject>(result);
             CSharpProject project = new CSharpProject("Aurora", "Agmiles", new List<string> { "C#" });
             Assert.AreEqual(project.ProjectType, loadedProject.ProjectType);
+        }
+
+        [TestMethod]
+        public void TestingSingleton()
+        {
+
         }
     }
 }

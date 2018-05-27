@@ -11,9 +11,6 @@ namespace Crest.Data.Interfaces
 {
     public interface IFactory<T> where T : IProject
     {
-         T LoadProject<T>(string text);
-         T LoadProjectFromPath<T>(string path);
-         void SaveProject(string location, IProject project);
-         T Get<T>(string location);
+        T Get<U>(string location);
     }
 }

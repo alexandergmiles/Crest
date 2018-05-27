@@ -13,10 +13,36 @@ using Crest.Data.Projects;
 
 namespace Crest.Data
 {
-    public class ProjectFactory : IFactory<IProject>
+    public sealed class ProjectFactory
     {
-        //This needs to become a singleton and we can remove the interface because it's not needed.
-        public T LoadProject<T>(string text)
+        private static readonly Lazy<ProjectFactory> lazy = new Lazy<ProjectFactory>(() => new ProjectFactory());
+
+        public static ProjectFactory Instance { get { return lazy.Value; } }
+
+        private ProjectFactory()
+        {
+
+        }
+
+        public static T Get<T>(string location)
+        {
+            switch (typeof(T).Name)
+            {
+                case "CSharpProject":
+                    if (!string.IsNullOrEmpty(location))
+                        return LoadProjectFromPath<T>(location);
+                    break;
+                case "CPPProject":
+                    if (!string.IsNullOrEmpty(location))
+                        return LoadProjectFromPath<T>(location);
+                    break;
+                default:
+                    throw new ProjectLoadFailureException();
+            }
+            throw new ProjectLoadFailureException();
+        }
+        //Who cares about the methods that handle the loading?
+        private static T LoadProject<T>(string text)
         {
             T project = JsonConvert.DeserializeObject<T>(text);
             if(project != null)
@@ -26,48 +52,24 @@ namespace Crest.Data
             throw new ProjectLoadFailureException("Project could not be loaded from passed text");
         }
 
-        public T LoadProjectFromPath<T>(string Path)
+        private static T LoadProjectFromPath<T>(string Path)
         {
-            try
-            {
-               return JsonConvert.DeserializeObject<T>(File.ReadAllText(Path));
-            }
-            catch(ProjectLoadFailureException exception)
-            {
-                Console.WriteLine($"An exception occured {exception.HResult}");
-            }
+            if(!string.IsNullOrEmpty(Path))
+                return JsonConvert.DeserializeObject<T>(File.ReadAllText(Path));
+
             throw new ProjectLoadFailureException();
         }
 
-        public async void SaveProject(string location, IProject project)
+        private static async void SaveProject(string location, IProject project)
         {
             using (StreamWriter writer = new StreamWriter(location, false, Encoding.Default))
             {
                 await writer.WriteAsync(JsonConvert.SerializeObject(project, Formatting.Indented));
                 //Probably need to take the return but we could also throw an exception if it can get that far
             }
-
             throw new Exception();
         }
 
 
-        public T Get<T>(string location)
-        {
-            switch ((typeof(T).Name))
-            {
-                case "CSharpProject" :
-                    if (!string.IsNullOrEmpty(location))
-                    {
-                        return LoadProjectFromPath<T>(location);
-                    }
-                    break;
-                case "CPPProject":
-                    return LoadProjectFromPath<T>(location);
-                    break;
-                default:
-                    throw new ProjectLoadFailureException();
-            }
-            throw new ProjectLoadFailureException();
-        }
     }
 }
