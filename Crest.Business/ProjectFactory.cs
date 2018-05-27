@@ -15,6 +15,7 @@ namespace Crest.Data
 {
     public class ProjectFactory : IFactory<IProject>
     {
+        //This needs to become a singleton and we can remove the interface because it's not needed.
         public T LoadProject<T>(string text)
         {
             T project = JsonConvert.DeserializeObject<T>(text);
@@ -38,17 +39,15 @@ namespace Crest.Data
             throw new ProjectLoadFailureException();
         }
 
-        public bool SaveProject(string location, IProject project)
+        public async void SaveProject(string location, IProject project)
         {
-            try
+            using (StreamWriter writer = new StreamWriter(location, false, Encoding.Default))
             {
-                File.WriteAllText(location, JsonConvert.SerializeObject(project, Formatting.Indented));
-                return true;
+                await writer.WriteAsync(JsonConvert.SerializeObject(project, Formatting.Indented));
+                //Probably need to take the return but we could also throw an exception if it can get that far
             }
-            catch (Exception e)
-            {
-                return false;
-            }
+
+            throw new Exception();
         }
 
 

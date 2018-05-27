@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 
 using System.IO;
 
-namespace Crest.Business
+namespace Crest.Data
 {
     public class ProjectFile
     {
+        public string Name;
+        public string FilePath;
     }
 }

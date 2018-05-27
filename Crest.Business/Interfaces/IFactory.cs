@@ -13,7 +13,7 @@ namespace Crest.Data.Interfaces
     {
          T LoadProject<T>(string text);
          T LoadProjectFromPath<T>(string path);
-         bool SaveProject(string location, IProject project);
+         void SaveProject(string location, IProject project);
          T Get<T>(string location);
     }
 }

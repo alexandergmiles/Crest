@@ -9,7 +9,8 @@ using Newtonsoft.Json;
 using Crest.Data.Interfaces;
 using Crest.Data.Exceptions;
 using System.IO;
-using Crest.Business;
+using Crest.Data;
+using System.Collections.ObjectModel;
 
 namespace Crest.Data
 {
@@ -21,7 +22,7 @@ namespace Crest.Data
         public IList<string> LanguagesUsed { get; set; }
         public ProjectType ProjectType { get; set;  }
         public string ProjectLocation { get; set; }
-        public IList<ProjectFile> AssociatedFiles { get; set; }
+        public ObservableCollection<ProjectFile> AssociatedFiles { get; set; }
 
         public Project()
         {
