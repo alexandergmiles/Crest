@@ -7,7 +7,7 @@ using Crest.Data.Exceptions;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using System.IO;
-using Crest.Data.Projects;
+
 using Crest.Data.Interfaces;
 
 namespace Crest.Test
@@ -15,6 +15,7 @@ namespace Crest.Test
     [TestClass]
     public class UnitTest1
     {
+
         [TestMethod]
         public void TestProjectSaving()
         {
@@ -27,11 +28,11 @@ namespace Crest.Test
                     path = folderBrowsingDialog.SelectedPath;
             }
             path += "/newProject.prj";
-            CSharpProject project = new CSharpProject("Aurora", "Agmiles", new List<string> { "C#" });
+            ProjectUtility.SaveProject(path, new Project("Aurora", "Agmiles", new List<string> { "C#" } , ProjectType.CSharp_Project));
         }
 
         [TestMethod]
-        public void TestProjectLoading()
+        public async void TestProjectLoading()
         {
             Stream loadStream = null;
             string result = "";
@@ -48,12 +49,13 @@ namespace Crest.Test
                 if ((loadStream = openFileDialog.OpenFile()) != null)
                     using (StreamReader reader = new StreamReader(loadStream))
                     {
-                        result = reader.ReadToEndAsync().Result;
+                        result = await reader.ReadToEndAsync();
                     }
             }
-            CSharpProject loadedProject = ProjectFactory.Get<CSharpProject>(result);
-            CSharpProject project = new CSharpProject("Aurora", "Agmiles", new List<string> { "C#" });
-            Assert.AreEqual(project.ProjectType, loadedProject.ProjectType);
+            var project = new Project("Aurora", "Agmiles", new List<string> { "C#" }, ProjectType.CSharp_Project);
+            var newProject = ProjectUtility.CreateProject(result) as Project;
+            
+            Assert.AreEqual(project.ProjectType, newProject.ProjectType);
         }
 
         [TestMethod]

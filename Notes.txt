@@ -1,0 +1,4 @@
+Reasons to change projectfactory and implement repo pattern:
+-	Somewhat aware of what we're creating
+-	Have limited set of what users need
+-	Could have multiple data sources instead so makes sense to use repo pattern

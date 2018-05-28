@@ -14,8 +14,8 @@ using System.Collections.ObjectModel;
 
 namespace Crest.Data
 {
-    public abstract class Project : IProject
-    {
+    public class Project : IProject
+    { 
         public string Name { get; set; }
         public DateTime CreatedDate { get; set; }
         public string CreatedUsername { get; set; }
@@ -28,12 +28,13 @@ namespace Crest.Data
         {
         }
 
-        public Project(string name, string user, IList<string> languagesUsed)
+        public Project(string name, string creator, IList<string> languagesUsed, ProjectType projectType)
         {
             Name = name;
-            CreatedDate = DateTime.Now;
-            CreatedUsername = user;
+            CreatedUsername = creator;
             LanguagesUsed = languagesUsed;
+            CreatedDate = DateTime.Now;
+            ProjectType = projectType;
         }
     }
 }
