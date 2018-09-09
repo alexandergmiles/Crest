@@ -5,8 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 
 using Crest.Data;
-using Crest.Data.Exceptions;
 using Crest.Data.Interfaces;
+using Crest.Data.Exceptions;
 
 
 namespace ConsoleAppUsedForDebugging
@@ -15,7 +15,11 @@ namespace ConsoleAppUsedForDebugging
     {
         static void Main(string[] args)
         {
-            Console.ReadLine();
+            IProject myNewProject = new Project();
+            ProjectFile newFile = new ProjectFile("CodeFIle.cs", "", FileType.Text);
+            myNewProject.AddFile(newFile);
+            Console.WriteLine($"{myNewProject.GetFiles().Count()}");
+            Console.ReadLine(); 
         }
     }
 }

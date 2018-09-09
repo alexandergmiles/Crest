@@ -26,15 +26,76 @@ namespace Crest.Data
 
         public Project()
         {
+            AssociatedFiles = new ObservableCollection<ProjectFile>();
         }
 
+        //Inline beacuse who uses block statements for initalisation these days
         public Project(string name, string creator, IList<string> languagesUsed, ProjectType projectType)
+            => (Name, CreatedUsername, LanguagesUsed, ProjectType, AssociatedFiles) = (name, creator, languagesUsed, projectType, new ObservableCollection<ProjectFile>());
+
+        //Deconstructor so we can get the important deets ez pz with the use of discards (_)
+        public void Deconstruct(out string name, out string creator, out IList<string> languagesUsed, ProjectType projectType) =>
+            (name, creator, languagesUsed, projectType) = (Name, CreatedUsername, LanguagesUsed, ProjectType);
+        
+        public void AddFile(ProjectFile file)
         {
-            Name = name;
-            CreatedUsername = creator;
-            LanguagesUsed = languagesUsed;
-            CreatedDate = DateTime.Now;
-            ProjectType = projectType;
+            AddFileToList(file);
         }
+
+        public void RemoveFile(ProjectFile file)
+        {
+            RemoveFileFromList(file);
+        }
+
+        public ObservableCollection<ProjectFile> GetFiles()
+        {
+            return AssociatedFiles;            
+        }
+
+
+        #region Helper methods
+        private IProject CreateProject(string text)
+        {
+            var project = JsonConvert.DeserializeObject<IProject>(text);
+            if (project != null)
+                return project;
+
+            throw new ProjectLoadFailureException("Project could not be loaded from passed text");
+        }
+
+        private void AddFileToList(ProjectFile file)
+        {
+            if(file != null)
+                AssociatedFiles.Add(file);
+            else
+                throw new NullReferenceException("File added is null");
+        }
+
+        private void RemoveFileFromList(ProjectFile file)
+        {
+            if (file != null)
+                AssociatedFiles.Remove(file);
+            else
+                throw new NullReferenceException("File added is null");
+        }
+
+        private IProject CreateProjectFromPath(string Path)
+        {
+            if (!string.IsNullOrEmpty(Path))
+                return JsonConvert.DeserializeObject<IProject>(File.ReadAllText(Path));
+
+            throw new ProjectLoadFailureException();
+        }
+
+        private void SaveProject(string location, IProject project)
+        {
+            using (StreamWriter writer = new StreamWriter(location, false, Encoding.Default))
+            {
+                writer.Write(JsonConvert.SerializeObject(project, Formatting.Indented));
+                //Probably need to take the return but we could also throw an exception if it can get that far
+            }
+        }
+
+        #endregion
     }
 }
